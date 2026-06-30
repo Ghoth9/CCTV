@@ -1147,10 +1147,60 @@
     <!-- MOCK BACKEND SERVER -->
     <!-- แทรกระบบจำลองการทำงานของฐานข้อมูลเพื่อใช้งานได้แบบ Standalone -->
     <script>
-        // Auto Redirect to Google Apps Script if running outside Google & Localhost
-        const urlParams = new URLSearchParams(window.location.search);
-        if (typeof google === 'undefined' && !urlParams.has('sim') && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
-            window.location.replace("https://script.google.com/macros/s/AKfycbyZexP-SLnnlQs8sNjHB8p0r9R81hrRN5GVVdlBlF7zUGeBnbdmYL2GMjrIb5QQ9tQqFQ/exec");
+        // API Bridge: Connect directly to Google Apps Script via fetch if running outside GAS (e.g. on Vercel)
+        if (typeof google === 'undefined') {
+            const gasUrl = "https://script.google.com/macros/s/AKfycbyZexP-SLnnlQs8sNjHB8p0r9R81hrRN5GVVdlBlF7zUGeBnbdmYL2GMjrIb5QQ9tQqFQ/exec";
+            
+            const makeCaller = (successCallback, failureCallback) => {
+                return new Proxy({}, {
+                    get: function(target, propKey) {
+                        if (propKey === 'withFailureHandler') {
+                            return function(failCb) {
+                                return makeCaller(successCallback, failCb);
+                            };
+                        }
+                        return function(...args) {
+                            fetch(gasUrl, {
+                                method: 'POST',
+                                body: JSON.stringify({ functionName: propKey, arguments: args }),
+                                headers: {
+                                    'Content-Type': 'text/plain;charset=utf-8'
+                                }
+                            })
+                            .then(res => res.json())
+                            .then(res => {
+                                if (res.success) {
+                                    if (successCallback) successCallback(res.result);
+                                } else {
+                                    if (failureCallback) failureCallback(res.error);
+                                    else console.error(res.error);
+                                }
+                            })
+                            .catch(err => {
+                                if (failureCallback) failureCallback(err);
+                                else console.error(err);
+                            });
+                        };
+                    }
+                });
+            };
+
+            window.google = {
+                script: {
+                    run: new Proxy({}, {
+                        get: function(target, propKey) {
+                            if (propKey === 'withSuccessHandler') {
+                                return function(successCallback) {
+                                    return makeCaller(successCallback, null);
+                                };
+                            }
+                            return function(...args) {
+                                makeCaller(null, null)[propKey](...args);
+                            };
+                        }
+                    })
+                }
+            };
         }
 
         // Data Initialization

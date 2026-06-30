@@ -1494,3 +1494,23 @@ function getActiveSS() {
   } catch (e) {}
   return SpreadsheetApp.openById("1X-vMNivhxv8CjA1koTJqDNXt70-k-Rb_bVFhbNKhBVI");
 }
+
+// ==========================================
+// ฟังก์ชัน doPost (API Gateway) รองรับการเรียกใช้ฟังก์ชันหลังบ้านจากโดเมนภายนอก (เช่น Vercel)
+// ==========================================
+function doPost(e) {
+  try {
+    const request = JSON.parse(e.postData.contents);
+    const functionName = request.functionName;
+    const args = request.arguments || [];
+    
+    // เรียกใช้งานฟังก์ชันที่ระบุแบบไดนามิก
+    const result = this[functionName].apply(this, args);
+    
+    return ContentService.createTextOutput(JSON.stringify({ success: true, result: result }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({ success: false, error: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
