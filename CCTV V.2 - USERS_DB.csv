@@ -1,0 +1,7 @@
+Username,Password,Role,FullName,assignedZones,,เบอร์ติดต่อ
+3,3,Admin,j,,,0988888888
+1,1,Member,M1,โซน A,,03999
+2,2,Member,M2,โซน A,,0092222
+11,11,Staff,S1,โซน A,"M1,M2",09852222
+,,,,,,
+,  ,,,,,
