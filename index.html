@@ -1431,6 +1431,8 @@
         let ticketStateTracker = {}; 
         let isFirstLoadNoti = true; 
         let dismissedNotis = JSON.parse(localStorage.getItem('cctv_dismissed_notis')) || [];
+        let readNotis = JSON.parse(localStorage.getItem('cctv_read_notis')) || [];
+        let currentDisplayNotis = [];
 
         const AppToast = Swal.mixin({
             toast: true, position: 'top-end', showConfirmButton: false, timer: 4000, timerProgressBar: true,
@@ -1449,7 +1451,22 @@
         function toggleNotificationPanel() {
             // ถ้าผู้ใช้กำลังลากอยู่ ให้ยกเลิกการคลิกเพื่อไม่ให้กล่องเด้งเปิดรบกวน
             if (window.isDraggingNoti) return; 
-            document.getElementById('noti-panel').classList.toggle('hidden');
+            const panel = document.getElementById('noti-panel');
+            const isOpening = panel.classList.contains('hidden');
+            panel.classList.toggle('hidden');
+            
+            if (isOpening && currentDisplayNotis.length > 0) {
+                currentDisplayNotis.forEach(t => {
+                    if (!readNotis.includes(t.notiKey)) {
+                        readNotis.push(t.notiKey);
+                    }
+                });
+                localStorage.setItem('cctv_read_notis', JSON.stringify(readNotis));
+                
+                // ซ่อนตัวเลขแดงบนกระดิ่งทันที
+                const badge = document.getElementById('noti-badge');
+                if (badge) badge.classList.add('hidden');
+            }
         }
 
         // ==========================================
@@ -1580,10 +1597,16 @@
                 setTimeout(() => bellIcon.classList.remove('animate-bounce', 'text-blue-500'), 3000);
             }
 
+            // บันทึกรายการล่าสุดที่กำลังแสดงผล
+            currentDisplayNotis = displayList;
+
+            // นับจำนวนการแจ้งเตือนที่ยังไม่ได้อ่าน
+            let unreadCount = displayList.filter(t => !readNotis.includes(t.notiKey)).length;
+
             const badge = document.getElementById('noti-badge');
-            let badgeCount = displayList.length;
-            if (badgeCount > 0) {
-                badge.innerText = badgeCount;
+            const isPanelOpen = !document.getElementById('noti-panel').classList.contains('hidden');
+            if (unreadCount > 0 && !isPanelOpen) {
+                badge.innerText = unreadCount;
                 badge.classList.remove('hidden');
             } else {
                 badge.classList.add('hidden');
@@ -2468,7 +2491,9 @@
             ticketStateTracker = {}; 
             isFirstLoadNoti = true;
             dismissedNotis = []; 
+            readNotis = [];
             localStorage.removeItem('cctv_dismissed_notis');
+            localStorage.removeItem('cctv_read_notis');
 
             showLoginScreenOnly(); 
         }
