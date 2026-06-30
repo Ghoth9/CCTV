@@ -1147,6 +1147,12 @@
     <!-- MOCK BACKEND SERVER -->
     <!-- แทรกระบบจำลองการทำงานของฐานข้อมูลเพื่อใช้งานได้แบบ Standalone -->
     <script>
+        // Auto Redirect to Google Apps Script if running outside Google & Localhost
+        const urlParams = new URLSearchParams(window.location.search);
+        if (typeof google === 'undefined' && !urlParams.has('sim') && window.location.hostname && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
+            window.location.replace("https://script.google.com/macros/s/AKfycbyZexP-SLnnlQs8sNjHB8p0r9R81hrRN5GVVdlBlF7zUGeBnbdmYL2GMjrIb5QQ9tQqFQ/exec");
+        }
+
         // Data Initialization
         const getSeedData = (key, defaultData) => JSON.parse(localStorage.getItem(key)) || defaultData;
         const saveData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
