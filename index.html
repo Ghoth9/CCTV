@@ -1044,10 +1044,15 @@
                 </div>
             </div>
             
-            <div id="cl-item-container">
+            <div id="cl-item-container" class="relative">
                 <label class="block text-xs md:text-sm font-extrabold text-slate-700 mb-2">เลือกสินค้าที่จะเคลม <span class="text-rose-500">*</span></label>
-                <input type="text" id="cl-item" list="cl-item-list" placeholder="พิมพ์ชื่อสินค้า หรือคลิกเลือกจากรายการ" class="w-full mb-4 md:mb-5 p-3.5 md:p-4 bg-slate-50/80 border border-slate-200/80 rounded-xl md:rounded-2xl outline-none focus:bg-white focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold shadow-sm">
-                <datalist id="cl-item-list"></datalist>
+                <div class="relative group">
+                    <input type="text" id="cl-item" autocomplete="off" placeholder="พิมพ์ชื่อสินค้า หรือคลิกเลือกจากรายการ" class="w-full mb-4 md:mb-5 pr-10 p-3.5 md:p-4 bg-slate-50/80 border border-slate-200/80 rounded-xl md:rounded-2xl outline-none focus:bg-white focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold shadow-sm" onfocus="showClaimSuggestions(this.value)" oninput="showClaimSuggestions(this.value)">
+                    <div class="absolute right-4 top-4 text-slate-400 pointer-events-none">
+                        <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </div>
+                    <div id="claim-suggestions" class="absolute left-0 right-0 top-full -mt-3 max-h-48 overflow-y-auto bg-white rounded-xl shadow-lg border border-slate-100 hidden z-[2100] divide-y divide-slate-50"></div>
+                </div>
             </div>
             
             <label class="block text-xs md:text-sm font-extrabold text-slate-700 mb-2">Serial Number (S/N)</label>
@@ -4009,12 +4014,10 @@
             document.getElementById('cl-item-container').classList.remove('hidden');
             document.getElementById('cl-item').value = '';
             
-            const listEl = document.getElementById('cl-item-list');
-            if (listEl) {
-                listEl.innerHTML = '';
-                inventoryList.forEach(item => {
-                    listEl.innerHTML += `<option value="${item.itemName} (${item.itemId})"></option>`;
-                });
+            const suggs = document.getElementById('claim-suggestions');
+            if (suggs) {
+                suggs.innerHTML = '';
+                suggs.classList.add('hidden');
             }
 
             document.getElementById('cl-sn').value = ''; document.getElementById('cl-issue').value = ''; document.getElementById('cl-note').value = '';
@@ -4104,6 +4107,45 @@
                 }).updateClaimStatus(claimId, newStatus, returnToInv);
             }
         }
+
+        function showClaimSuggestions(val = '') {
+            const container = document.getElementById('claim-suggestions');
+            if (!container) return;
+            
+            const query = val.toLowerCase();
+            // ค้นหาสินค้าจากสต๊อก
+            const matches = inventoryList.filter(item => 
+                item.itemName.toLowerCase().includes(query) || 
+                item.itemId.toLowerCase().includes(query)
+            );
+            
+            if (matches.length === 0) {
+                container.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center font-bold">ไม่พบสินค้าในระบบคลัง (กดพิมพ์ชื่อนี้เพื่อเคลมได้เลย)</div>';
+            } else {
+                container.innerHTML = matches.map(item => `
+                    <div onclick="selectClaimSuggestion('${item.itemName} (${item.itemId})')" class="p-3 hover:bg-orange-50/50 cursor-pointer text-slate-700 font-extrabold text-xs md:text-sm transition-colors flex justify-between items-center">
+                        <span>${item.itemName}</span>
+                        <span class="text-[10px] font-mono text-slate-400 font-bold">${item.itemId}</span>
+                    </div>
+                `).join('');
+            }
+            
+            container.classList.remove('hidden');
+        }
+        
+        function selectClaimSuggestion(val) {
+            document.getElementById('cl-item').value = val;
+            document.getElementById('claim-suggestions').classList.add('hidden');
+        }
+        
+        // ดักจับการคลิกข้างนอก เพื่อซ่อนรายการแนะนำสินค้าเคลม
+        document.addEventListener('click', function(e) {
+            const container = document.getElementById('claim-suggestions');
+            const input = document.getElementById('cl-item');
+            if (container && input && !container.contains(e.target) && e.target !== input) {
+                container.classList.add('hidden');
+            }
+        });
 
         function viewClaimDetails(claimId) {
             const c = claimDataList.find(item => item.claimId === claimId);
