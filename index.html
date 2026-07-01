@@ -2604,6 +2604,10 @@
                 map.on('popupopen', function(e) {
                     const popupNode = e.popup.getElement();
                     if (!popupNode) return;
+                    
+                    // ป้องกันการคลิกใดๆ ในป๊อปอัป (รวมถึงปุ่ม Fullscreen วิดีโอ) ไม่ให้ส่งต่อไปหาแผนที่ ซึ่งจะทำให้ป๊อปอัปปิดตัวและวิดีโอหลุด
+                    L.DomEvent.disableClickPropagation(popupNode);
+                    
                     const videoEl = popupNode.querySelector('video.hls-player');
                     if (videoEl) {
                         const src = videoEl.getAttribute('data-src');
