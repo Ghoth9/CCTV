@@ -2670,7 +2670,13 @@
                         
                         cctvDataList = cameras; 
                         updateProjectFilter(); 
-                        applyMapFilters(); 
+                        
+                        // ป้องกันไม่ให้แผนที่รีเฟรชมาร์กเกอร์จนป๊อปอัปสตรีมวิดีโอค้าง/เด้งหลุด ขณะที่ผู้ใช้กำลังเปิดดูอยู่
+                        const isPopupOpen = map && map.getContainer() && map.getContainer().querySelector('.leaflet-popup');
+                        if (!isPopupOpen) {
+                            applyMapFilters(); 
+                        }
+                        
                         populateCameraDropdowns();
                         
                         if (currentUser && currentUser.role !== 'Member') renderAdminTable(); 
