@@ -1612,7 +1612,13 @@
             const bellContainer = document.getElementById('in-app-notification');
             if (!bellContainer || !currentUser) return;
             
-            bellContainer.classList.remove('hidden'); 
+            // ซ่อนกระดิ่งเตือนความเดือดร้อนถ้าเปิดหน้าแอดมินอยู่
+            const isAdminViewVisible = document.getElementById('admin-view') && !document.getElementById('admin-view').classList.contains('hidden');
+            if (isAdminViewVisible) {
+                bellContainer.classList.add('hidden');
+            } else {
+                bellContainer.classList.remove('hidden'); 
+            }
 
             let newAlerts = [];
             let displayList = [];
@@ -2579,11 +2585,11 @@
                 noti.className = "fixed top-4 right-4 md:top-6 md:right-56 z-[2500] cursor-move touch-none";
                 panel.classList.remove('bottom-full', 'mb-3', 'origin-bottom-right');
                 panel.classList.add('top-full', 'mt-3', 'origin-top-right');
+                if (currentUser) noti.classList.remove('hidden');
             } else {
-                // หน้าแอดมิน: กระดิ่งอยู่ขวาล่าง (พ้นปุ่มควบคุมด้านบน), แผงแจ้งเตือนเปิดขึ้นด้านบน
-                noti.className = "fixed bottom-6 right-6 z-[2500] cursor-move touch-none";
-                panel.classList.remove('top-full', 'mt-3', 'origin-top-right');
-                panel.classList.add('bottom-full', 'mb-3', 'origin-bottom-right');
+                // หน้าแอดมิน: ซ่อนกระดิ่งแจ้งเตือนเพื่อความสะอาดตาและไม่ทับซ้อนปุ่มสั่งการ
+                noti.classList.add('hidden');
+                panel.classList.add('hidden');
             }
         }
 
@@ -4140,11 +4146,40 @@
         
         // ดักจับการคลิกข้างนอก เพื่อซ่อนรายการแนะนำสินค้าเคลม
         document.addEventListener('click', function(e) {
+            // 1. ซ่อนรายการแนะนำสินค้าเคลมเมื่อคลิกข้างนอก
             const container = document.getElementById('claim-suggestions');
             const input = document.getElementById('cl-item');
             if (container && input && !container.contains(e.target) && e.target !== input) {
                 container.classList.add('hidden');
             }
+            
+            // 2. ปิดกล่องโมดอล (Modal) ต่างๆ เมื่อคลิกที่พื้นหลังสีเทาด้านนอกตัวกล่องข้อมูล
+            const modals = [
+                'claim-modal', 'claim-detail-modal', 'staff-ticket-modal', 
+                'view-images-modal', 'install-modal', 'add-camera-modal', 
+                'user-modal', 'inventory-modal', 'borrow-modal'
+            ];
+            modals.forEach(id => {
+                const modal = document.getElementById(id);
+                if (modal && !modal.classList.contains('hidden') && e.target === modal) {
+                    modal.classList.add('hidden');
+                    
+                    // ล้างข้อมูลฟอร์มเมื่อกดปิด (ถ้ามีฟิลด์ข้อมูลค้าง)
+                    if (id === 'claim-modal') {
+                        document.getElementById('cl-sn').value = '';
+                        document.getElementById('cl-issue').value = '';
+                        document.getElementById('cl-note').value = '';
+                    }
+                    if (id === 'staff-ticket-modal') {
+                        document.getElementById('stf-camId').value = '';
+                        document.getElementById('stf-issue').value = '';
+                        document.getElementById('stf-imgs').value = '';
+                        const err = document.getElementById('file-error-stf');
+                        if (err) err.classList.add('hidden');
+                        localStorage.removeItem('is_staff_modal_open');
+                    }
+                }
+            });
         });
 
         function viewClaimDetails(claimId) {
