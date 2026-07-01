@@ -12,6 +12,7 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
@@ -2598,6 +2599,38 @@
                 L.tileLayer('https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', { maxZoom: 19 }).addTo(map);
                 L.control.zoom({ position: 'bottomright' }).addTo(map);
                 markersGroup = L.featureGroup().addTo(map);
+                
+                // ระบบเล่นวิดีโอสด HLS (.m3u8) บนเบราว์เซอร์ทุกตัวผ่าน hls.js
+                map.on('popupopen', function(e) {
+                    const popupNode = e.popup.getElement();
+                    if (!popupNode) return;
+                    const videoEl = popupNode.querySelector('video.hls-player');
+                    if (videoEl) {
+                        const src = videoEl.getAttribute('data-src');
+                        if (Hls.isSupported()) {
+                            const hls = new Hls();
+                            hls.loadSource(src);
+                            hls.attachMedia(videoEl);
+                            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                                videoEl.play().catch(err => console.log('Auto-play prevented', err));
+                            });
+                            videoEl.hlsInstance = hls;
+                        } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+                            videoEl.src = src;
+                            videoEl.play().catch(err => console.log('Auto-play prevented', err));
+                        }
+                    }
+                });
+
+                map.on('popupclose', function(e) {
+                    const popupNode = e.popup.getElement();
+                    if (!popupNode) return;
+                    const videoEl = popupNode.querySelector('video.hls-player');
+                    if (videoEl && videoEl.hlsInstance) {
+                        videoEl.hlsInstance.destroy();
+                        videoEl.hlsInstance = null;
+                    }
+                });
             }
         }
 
@@ -2688,7 +2721,9 @@
                     } else if(cleanUrl.includes('youtube') || cleanUrl.includes('iframe') || cleanUrl.includes('<iframe')) {
                         let srcUrl = cleanUrl; if(srcUrl.includes('src="')) srcUrl = srcUrl.split('src="')[1].split('"')[0];
                         mediaHtml = `<iframe src="${srcUrl}" class="custom-popup-media" frameborder="0" allowfullscreen autoplay></iframe>`;
-                    } else if (cleanUrl.toLowerCase().endsWith('.m3u8') || cleanUrl.toLowerCase().endsWith('.mp4')) {
+                    } else if (cleanUrl.toLowerCase().endsWith('.m3u8')) {
+                        mediaHtml = `<video data-src="${cleanUrl}" class="custom-popup-media hls-player" autoplay muted playsinline controls></video>`;
+                    } else if (cleanUrl.toLowerCase().endsWith('.mp4')) {
                         mediaHtml = `<video src="${cleanUrl}" class="custom-popup-media" autoplay muted playsinline controls></video>`;
                     } else { mediaHtml = `<img src="${cleanUrl}" class="custom-popup-media" onerror="this.src='https://placehold.co/600x400?text=No+Image'">`; }
                 }
