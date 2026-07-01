@@ -108,11 +108,11 @@
                         </div>
                     </div>
                     <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:text-blue-600 transition-colors shadow-inner">
-                        <i id="radar-toggle-icon" class="fa-solid fa-chevron-up transition-transform duration-300 rotate-180"></i>
+                        <i id="radar-toggle-icon" class="fa-solid fa-chevron-up transition-transform duration-300"></i>
                     </div>
                 </div>
 
-                <div id="radar-content" class="overflow-hidden transition-all duration-300 max-h-0 opacity-0 mt-0 md:max-h-[500px] md:opacity-100 md:mt-5">
+                <div id="radar-content" class="overflow-hidden transition-all duration-300 max-h-[500px] opacity-100 mt-5">
                     <div class="relative mb-4 md:mb-5 group">
                         <i class="fa-solid fa-location-dot absolute left-4 top-3.5 text-slate-400 group-focus-within:text-blue-500 transition-colors"></i>
                         <input type="text" id="map-search" autocomplete="off" placeholder="สถานที่, โครงการ, รหัส..." class="w-full pl-12 pr-4 py-3 bg-white/60 border border-slate-200 rounded-2xl outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-medium shadow-sm text-xs md:text-sm" oninput="handleMapSearchInput(this.value)" onkeyup="handleMapSearchFilter()" onclick="showSuggestions(this.value)">
@@ -2523,14 +2523,19 @@
         function showMapView() {
             document.querySelectorAll('.admin-panel').forEach(el => el.classList.add('hidden'));
             document.getElementById('admin-view').style.display = 'none';
-            document.getElementById('user-view').style.display = 'block'; document.getElementById('user-view').classList.remove('hidden');
+            document.getElementById('admin-view').classList.add('hidden');
+            document.getElementById('user-view').style.display = 'block'; 
+            document.getElementById('user-view').classList.remove('hidden');
             setTimeout(() => map.invalidateSize(), 300);
             if(window.innerWidth < 1024) toggleSidebar(); 
             updateNotiLayout('map');
         }
 
         function showAdminPanel() {
-            document.getElementById('user-view').style.display = 'none'; document.getElementById('admin-view').style.display = 'flex';
+            document.getElementById('user-view').style.display = 'none'; 
+            document.getElementById('user-view').classList.add('hidden');
+            document.getElementById('admin-view').style.display = 'flex';
+            document.getElementById('admin-view').classList.remove('hidden');
             if (currentUser && currentUser.role === 'Member') switchAdminTab('member-maintain-tab');
             else switchAdminTab('dash-tab');
             updateNotiLayout('admin');
@@ -2607,6 +2612,17 @@
                     
                     // ป้องกันการคลิกใดๆ ในป๊อปอัป (รวมถึงปุ่ม Fullscreen วิดีโอ) ไม่ให้ส่งต่อไปหาแผนที่ ซึ่งจะทำให้ป๊อปอัปปิดตัวและวิดีโอหลุด
                     L.DomEvent.disableClickPropagation(popupNode);
+                    
+                    // บนมือถือ ให้ย่อแผง CCTV Radar ลงโดยอัตโนมัติเมื่อกดเปิดกล้อง เพื่อไม่ให้แผงลอยทับหน้าต่างกล้อง
+                    if (window.innerWidth < 768) {
+                        const content = document.getElementById('radar-content');
+                        const icon = document.getElementById('radar-toggle-icon');
+                        if (content && !content.classList.contains('max-h-0')) {
+                            content.classList.remove('max-h-[500px]', 'opacity-100', 'mt-5');
+                            content.classList.add('max-h-0', 'opacity-0', 'mt-0');
+                            if (icon) icon.classList.add('rotate-180');
+                        }
+                    }
                     
                     const videoEl = popupNode.querySelector('video.hls-player');
                     if (videoEl) {
