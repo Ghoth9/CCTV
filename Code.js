@@ -1354,6 +1354,68 @@ function generateSingleInstallPDF(installId) {
   } catch (err) { return { success: false, error: err.toString() }; }
 }
 
+function generateSingleClaimPDF(claimId) {
+  try {
+    const ss = getActiveSS();
+    const claims = getClaimData().data;
+    const claim = claims.find(c => c.claimId === claimId);
+    
+    if (!claim) return { success: false, error: "ไม่พบข้อมูลใบส่งเคลมนี้" };
+
+    let htmlContent = `
+      <style>
+        body { font-family: 'Tahoma', sans-serif; padding: 20px 30px; color: #333; line-height: 1.5; font-size: 13px; }
+        .header-box { text-align: center; border: 2px solid #f97316; padding: 8px; margin-bottom: 15px; background-color: #fff7ed; }
+        .ticket-title { font-size: 20px; font-weight: bold; margin: 0; color: #ea580c; }
+        .info-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+        .info-table td { padding: 6px 8px; border-bottom: 1px solid #eee; vertical-align: top; }
+        .label { font-weight: bold; width: 25%; color: #555; }
+        .value { width: 75%; }
+        .footer { margin-top: 40px; text-align: right; font-size: 12px; }
+        .status-badge { display: inline-block; padding: 3px 10px; border-radius: 4px; background: #ffedd5; color: #ea580c; font-weight: bold; border: 1px solid #fed7aa; }
+      </style>
+      
+      <div class="header-box">
+        <p class="ticket-title">ใบส่งเคลมสินค้า (Product Claim Form)</p>
+        <p style="margin: 5px 0 0 0;">ID: ${claim.claimId}</p>
+      </div>
+
+      <table class="info-table">
+        <tr><td class="label">วันที่ส่งเคลม:</td><td class="value">${claim.claimDate}</td></tr>
+        <tr><td class="label">สถานะการเคลม:</td><td class="value"><span class="status-badge">${claim.status}</span></td></tr>
+        <tr><td class="label">ชื่อสินค้าชำรุด:</td><td class="value"><b>${claim.itemName}</b></td></tr>
+        <tr><td class="label">รหัสสินค้า (Item ID):</td><td class="value">${claim.itemId}</td></tr>
+        <tr><td class="label">Serial Number (S/N):</td><td class="value">${claim.serialNumber || '-'}</td></tr>
+        <tr><td class="label">อาการเสีย / รายละเอียด:</td><td class="value">${claim.issue}</td></tr>
+        <tr><td class="label">ผู้รายงาน / ผู้ส่งเคลม:</td><td class="value">${claim.reportedBy}</td></tr>
+        <tr><td class="label">หมายเหตุเพิ่มเติม:</td><td class="value">${claim.note || '-'}</td></tr>
+        <tr><td class="label">อัปเดตล่าสุดเมื่อ:</td><td class="value">${claim.updateDate || '-'}</td></tr>
+      </table>
+
+      <table style="width: 100%; margin-top: 50px; text-align: center;">
+        <tr>
+          <td>
+             <p>....................................................</p>
+             <p>ผู้แจ้งเคลม / ผู้ส่งมอบ</p>
+             <p>วันที่: ______/______/______</p>
+          </td>
+          <td>
+             <p>....................................................</p>
+             <p>ผู้รับสินค้าเคลม / ช่างเทคนิค</p>
+             <p>วันที่: ______/______/______</p>
+          </td>
+        </tr>
+      </table>
+    `;
+
+    const blob = HtmlService.createHtmlOutput(htmlContent).getAs('application/pdf').setName(`ClaimTicket_${claim.claimId}.pdf`);
+    const folder = getOrCreateFolder("CCTV_Reports");
+    const file = folder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    return { success: true, url: file.getUrl() };
+  } catch (err) { return { success: false, error: err.toString() }; }
+}
+
 
 // ==========================================
 // Utils Functions & Delete Operations

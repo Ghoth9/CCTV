@@ -1045,10 +1045,9 @@
             </div>
             
             <div id="cl-item-container">
-                <label class="block text-xs md:text-sm font-extrabold text-slate-700 mb-2">เลือกสินค้าที่จะเคลม</label>
-                <select id="cl-item" class="w-full mb-4 md:mb-5 p-3.5 md:p-4 bg-slate-50/80 border border-slate-200/80 rounded-xl md:rounded-2xl outline-none focus:bg-white focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 cursor-pointer transition-all truncate font-bold shadow-sm appearance-none">
-                    <option value="">กำลังโหลดสินค้า...</option>
-                </select>
+                <label class="block text-xs md:text-sm font-extrabold text-slate-700 mb-2">เลือกสินค้าที่จะเคลม <span class="text-rose-500">*</span></label>
+                <input type="text" id="cl-item" list="cl-item-list" placeholder="พิมพ์ชื่อสินค้า หรือคลิกเลือกจากรายการ" class="w-full mb-4 md:mb-5 p-3.5 md:p-4 bg-slate-50/80 border border-slate-200/80 rounded-xl md:rounded-2xl outline-none focus:bg-white focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold shadow-sm">
+                <datalist id="cl-item-list"></datalist>
             </div>
             
             <label class="block text-xs md:text-sm font-extrabold text-slate-700 mb-2">Serial Number (S/N)</label>
@@ -1061,6 +1060,69 @@
             <input type="text" id="cl-note" placeholder="เช่น ร้านที่ซื้อ, เลขที่ใบเสร็จ" class="w-full mb-6 md:mb-10 p-3.5 md:p-4 bg-slate-50/80 border border-slate-200/80 rounded-xl md:rounded-2xl outline-none focus:bg-white focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-medium shadow-sm">
             
             <button onclick="submitClaim()" id="btn-submit-claim" class="w-full py-3.5 md:py-4 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-xl md:rounded-2xl font-extrabold transition-all shadow-lg shadow-orange-500/30 hover:shadow-xl hover:-translate-y-1 text-base md:text-lg">ยืนยันแจ้งเคลม</button>
+        </div>
+    </div>
+
+    <!-- Claim Detail Modal -->
+    <div id="claim-detail-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[2000] flex items-center justify-center p-4 fade-in">
+        <div class="glass-modal p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] w-full max-w-lg max-h-[85dvh] overflow-y-auto relative slide-up custom-scrollbar">
+            <button onclick="document.getElementById('claim-detail-modal').classList.add('hidden');" class="absolute top-4 right-4 md:top-6 md:right-6 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-rose-100 hover:text-rose-600 transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="flex items-center gap-4 md:gap-5 mb-6 md:mb-8 border-b border-slate-100 pb-4">
+                <div class="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl md:rounded-2xl flex items-center justify-center text-white text-xl md:text-2xl shadow-lg shadow-orange-500/20"><i class="fa-solid fa-file-invoice"></i></div>
+                <div>
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 tracking-tight">รายละเอียดการแจ้งเคลม</h2>
+                    <p class="text-xs md:text-sm text-slate-500 font-medium">รหัสเคลม: <span id="det-claimId" class="font-mono font-bold text-orange-600"></span></p>
+                </div>
+            </div>
+            
+            <div class="space-y-4 text-xs md:text-sm">
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">ชื่อสินค้า:</span>
+                    <span id="det-itemName" class="w-2/3 text-slate-800 font-bold"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">รหัสสินค้า (Item ID):</span>
+                    <span id="det-itemId" class="w-2/3 text-slate-600 font-mono font-bold"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">Serial Number (S/N):</span>
+                    <span id="det-sn" class="w-2/3 text-slate-700 font-mono font-bold"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">ผู้แจ้งเคลม:</span>
+                    <span id="det-reportedBy" class="w-2/3 text-slate-700 font-bold"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">วันที่แจ้งเคลม:</span>
+                    <span id="det-claimDate" class="w-2/3 text-slate-700 font-medium"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">สถานะ:</span>
+                    <span id="det-status" class="w-2/3 font-bold text-orange-600"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">อัปเดตล่าสุด:</span>
+                    <span id="det-updateDate" class="w-2/3 text-slate-500 font-medium"></span>
+                </div>
+                <div class="flex flex-col border-b border-slate-50 pb-2">
+                    <span class="text-slate-400 font-bold mb-1">อาการเสีย / รายละเอียด:</span>
+                    <span id="det-issue" class="text-slate-700 font-medium whitespace-pre-wrap bg-slate-50 p-3 rounded-xl border border-slate-100"></span>
+                </div>
+                <div class="flex flex-col pb-2">
+                    <span class="text-slate-400 font-bold mb-1">หมายเหตุเพิ่มเติม:</span>
+                    <span id="det-note" class="text-slate-700 font-medium bg-slate-50 p-3 rounded-xl border border-slate-100"></span>
+                </div>
+            </div>
+            
+            <div class="flex gap-3 mt-6 md:mt-8 pt-4 border-t border-slate-100">
+                <button id="btn-export-claim-pdf" class="flex-1 py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-xl font-bold shadow-lg shadow-orange-500/20 hover:shadow-xl hover:-translate-y-0.5 transition-all text-xs md:text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-file-pdf text-base"></i> ส่งออก PDF ใบส่งเคลม
+                </button>
+                <button onclick="document.getElementById('claim-detail-modal').classList.add('hidden');" class="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold transition-all text-xs md:text-sm">
+                    ปิด
+                </button>
+            </div>
         </div>
     </div>
 
@@ -3907,7 +3969,7 @@
                 
                 if(currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Staff')) {
                     actionHtml = `
-                        <select onchange="changeClaimStatus('${c.claimId}', this.value)" class="w-full h-6 md:h-8 px-0 md:px-2 rounded text-[7px] md:text-xs font-black border outline-none cursor-pointer text-center shadow-sm appearance-none ${statusClass} tracking-tighter" style="text-align-last: center;">
+                        <select onclick="event.stopPropagation();" onchange="changeClaimStatus('${c.claimId}', this.value)" class="w-full h-6 md:h-8 px-0 md:px-2 rounded text-[7px] md:text-xs font-black border outline-none cursor-pointer text-center shadow-sm appearance-none ${statusClass} tracking-tighter" style="text-align-last: center;">
                             <option value="รอส่งเคลม" ${c.status === 'รอส่งเคลม' ? 'selected' : ''}>รอส่ง</option>
                             <option value="กำลังเคลม" ${c.status === 'กำลังเคลม' ? 'selected' : ''}>กำลังทำ</option>
                             <option value="เคลมสำเร็จ" ${c.status === 'เคลมสำเร็จ' ? 'selected' : ''}>สำเร็จ</option>
@@ -3920,7 +3982,7 @@
                 const safeNote = c.note.replace(/'/g, "\\'");
 
                 return `
-                <tr class="hover:bg-slate-50 transition-colors border-b border-slate-50">
+                <tr onclick="viewClaimDetails('${c.claimId}')" class="hover:bg-slate-50 cursor-pointer transition-colors border-b border-slate-50">
                     <td class="p-1 md:p-4 font-mono text-[6.5px] md:text-xs font-bold text-slate-500 align-top text-center md:text-left break-all">${c.claimId}</td>
                     <td class="p-1 md:p-4 align-top">
                         <div class="font-bold text-slate-800 text-[7px] md:text-sm mb-0.5 leading-tight break-words">${c.itemName}</div>
@@ -3934,8 +3996,9 @@
                     </td>
                     <td class="p-0.5 md:p-4 text-center align-top">
                         <div class="flex flex-col gap-0.5 items-center justify-center w-full mt-0.5">
-                            <button onclick="openEditClaim('${c.claimId}', '${c.serialNumber}', '${safeIssue}', '${safeNote}')" class="w-full h-6 md:h-8 bg-white border border-slate-200 text-amber-500 rounded text-[7px] md:text-sm shadow-sm flex items-center justify-center transition-colors hover:bg-amber-50"><i class="fa-solid fa-pen"></i></button>
-                            ${canDelete ? `<button onclick="confirmDelete('${c.claimId}', 'claim')" class="w-full h-6 md:h-8 bg-white border border-slate-200 text-rose-500 rounded text-[7px] md:text-sm shadow-sm flex items-center justify-center transition-colors hover:bg-rose-50"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+                            <button onclick="event.stopPropagation(); viewClaimDetails('${c.claimId}')" class="w-full h-6 md:h-8 bg-white border border-slate-200 text-blue-500 rounded text-[7px] md:text-sm shadow-sm flex items-center justify-center transition-colors hover:bg-blue-50" title="ดูรายละเอียด"><i class="fa-solid fa-eye"></i></button>
+                            <button onclick="event.stopPropagation(); openEditClaim('${c.claimId}', '${c.serialNumber}', '${safeIssue}', '${safeNote}')" class="w-full h-6 md:h-8 bg-white border border-slate-200 text-amber-500 rounded text-[7px] md:text-sm shadow-sm flex items-center justify-center transition-colors hover:bg-amber-50" title="แก้ไข"><i class="fa-solid fa-pen"></i></button>
+                            ${canDelete ? `<button onclick="event.stopPropagation(); confirmDelete('${c.claimId}', 'claim')" class="w-full h-6 md:h-8 bg-white border border-slate-200 text-rose-500 rounded text-[7px] md:text-sm shadow-sm flex items-center justify-center transition-colors hover:bg-rose-50" title="ลบ"><i class="fa-solid fa-trash-can"></i></button>` : ''}
                         </div>
                     </td>
                 </tr>`;
@@ -3944,9 +4007,15 @@
 
         function openClaimModal() {
             document.getElementById('cl-item-container').classList.remove('hidden');
-            const selectEl = document.getElementById('cl-item'); selectEl.innerHTML = '<option value="">-- เลือกสินค้าที่จะเคลม --</option>';
-            if (inventoryList.length === 0) selectEl.innerHTML = '<option value="">ไม่มีสินค้าในระบบ</option>';
-            else inventoryList.forEach(item => { selectEl.innerHTML += `<option value="${item.itemId}|${item.itemName}">${item.itemName} (${item.itemId})</option>`; });
+            document.getElementById('cl-item').value = '';
+            
+            const listEl = document.getElementById('cl-item-list');
+            if (listEl) {
+                listEl.innerHTML = '';
+                inventoryList.forEach(item => {
+                    listEl.innerHTML += `<option value="${item.itemName} (${item.itemId})"></option>`;
+                });
+            }
 
             document.getElementById('cl-sn').value = ''; document.getElementById('cl-issue').value = ''; document.getElementById('cl-note').value = '';
             
@@ -3986,9 +4055,19 @@
                     }).editClaimTicket(data);
                 }
             } else {
-                const selectVal = document.getElementById('cl-item').value;
-                if(!selectVal || !issue) return Swal.fire('เตือน', 'กรุณาเลือกสินค้าและระบุอาการเสีย', 'warning');
-                const [itemId, itemName] = selectVal.split('|');
+                const inputVal = document.getElementById('cl-item').value.trim();
+                if(!inputVal || !issue) return Swal.fire('เตือน', 'กรุณาระบุสินค้าและอาการเสีย', 'warning');
+                
+                let itemId = 'CUSTOM';
+                let itemName = inputVal;
+                
+                // ตรวจสอบว่าเลือกจากรายการที่มีรหัสสินค้าแบบ (INV-XXX) หรือไม่
+                const match = inputVal.match(/(.+)\s+\(([^)]+)\)$/);
+                if (match) {
+                    itemName = match[1].trim();
+                    itemId = match[2].trim();
+                }
+                
                 const data = { itemId, itemName, serialNumber: sn, issue, note, reportedBy: currentUser.fullName };
                 btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังบันทึก...'; btn.disabled = true;
                 if(typeof google !== 'undefined') {
@@ -4023,6 +4102,77 @@
                     if(res.success) { Swal.fire('อัปเดตสำเร็จ', '', 'success'); loadClaimData(); } 
                     else { Swal.fire('ข้อผิดพลาด', res.error, 'error'); loadClaimData(); }
                 }).updateClaimStatus(claimId, newStatus, returnToInv);
+            }
+        }
+
+        function viewClaimDetails(claimId) {
+            const c = claimDataList.find(item => item.claimId === claimId);
+            if (!c) return;
+            
+            document.getElementById('det-claimId').innerText = c.claimId;
+            document.getElementById('det-itemName').innerText = c.itemName;
+            document.getElementById('det-itemId').innerText = c.itemId;
+            document.getElementById('det-sn').innerText = c.serialNumber || '-';
+            document.getElementById('det-reportedBy').innerText = c.reportedBy;
+            document.getElementById('det-claimDate').innerText = c.claimDate;
+            document.getElementById('det-status').innerText = c.status;
+            document.getElementById('det-updateDate').innerText = c.updateDate || '-';
+            document.getElementById('det-issue').innerText = c.issue || '-';
+            document.getElementById('det-note').innerText = c.note || '-';
+            
+            // ตั้งค่าสีสถานะตามสถานะจริง
+            const statusEl = document.getElementById('det-status');
+            statusEl.className = "w-2/3 font-bold";
+            if (c.status === 'รอส่งเคลม') statusEl.classList.add('text-slate-500');
+            else if (c.status === 'กำลังเคลม') statusEl.classList.add('text-amber-500');
+            else if (c.status === 'เคลมสำเร็จ') statusEl.classList.add('text-emerald-500');
+            else if (c.status === 'เคลมไม่ได้') statusEl.classList.add('text-rose-500');
+            
+            // ตั้งลิงก์ส่งออก PDF
+            const pdfBtn = document.getElementById('btn-export-claim-pdf');
+            pdfBtn.onclick = () => exportSingleClaimPDF(c.claimId);
+            
+            document.getElementById('claim-detail-modal').classList.remove('hidden');
+        }
+
+        function exportSingleClaimPDF(claimId) {
+            const pdfBtn = document.getElementById('btn-export-claim-pdf');
+            const originalHtml = pdfBtn.innerHTML;
+            
+            pdfBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังสร้าง PDF...';
+            pdfBtn.disabled = true;
+            
+            if (typeof google !== 'undefined') {
+                google.script.run.withSuccessHandler(res => {
+                    pdfBtn.innerHTML = originalHtml;
+                    pdfBtn.disabled = false;
+                    
+                    if (res.success) {
+                        Swal.fire({
+                            title: 'สร้างใบส่งเคลมสำเร็จ',
+                            text: `สร้างไฟล์ PDF ของใบเคลมรหัส ${claimId} เรียบร้อยแล้ว`,
+                            icon: 'success',
+                            showCancelButton: true,
+                            confirmButtonText: 'เปิดดู PDF',
+                            cancelButtonText: 'ปิด',
+                            confirmButtonColor: '#ea580c'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.open(res.url, '_blank');
+                            }
+                        });
+                    } else {
+                        Swal.fire('เกิดข้อผิดพลาด', res.error, 'error');
+                    }
+                }).withFailureHandler(err => {
+                    pdfBtn.innerHTML = originalHtml;
+                    pdfBtn.disabled = false;
+                    Swal.fire('ข้อผิดพลาดเครือข่าย', 'ไม่สามารถสร้างไฟล์ PDF ได้', 'error');
+                }).generateSingleClaimPDF(claimId);
+            } else {
+                pdfBtn.innerHTML = originalHtml;
+                pdfBtn.disabled = false;
+                Swal.fire('แจ้งเตือน', 'สภาพแวดล้อมไม่รองรับ Google Apps Script', 'warning');
             }
         }
 
