@@ -2722,7 +2722,7 @@
                                 </div>
                             </div>
                         `;
-                    } else if(cleanUrl.includes('youtube') || cleanUrl.includes('iframe') || cleanUrl.includes('<iframe')) {
+                    } else if(cleanUrl.includes('youtube') || cleanUrl.includes('iframe') || cleanUrl.includes('<iframe') || cleanUrl.includes('rtsp.me') || cleanUrl.includes('/embed/')) {
                         let srcUrl = cleanUrl; if(srcUrl.includes('src="')) srcUrl = srcUrl.split('src="')[1].split('"')[0];
                         mediaHtml = `<iframe src="${srcUrl}" class="custom-popup-media" frameborder="0" allowfullscreen autoplay></iframe>`;
                     } else if (cleanUrl.toLowerCase().endsWith('.m3u8')) {
