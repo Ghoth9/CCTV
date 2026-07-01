@@ -2672,7 +2672,16 @@
 
                 let mediaHtml = `<div class="custom-popup-media flex items-center justify-center bg-slate-900 text-slate-600"><i class="fa-solid fa-video-slash text-5xl opacity-50"></i></div>`;
                 if(cam.mediaUrl) {
-                    if(cam.mediaUrl.includes('youtube') || cam.mediaUrl.includes('iframe') || cam.mediaUrl.includes('<iframe')) {
+                    if(cam.mediaUrl.startsWith('rtsp://')) {
+                        mediaHtml = `
+                            <div class="custom-popup-media flex flex-col items-center justify-center bg-slate-950 text-white p-4 text-center font-sans">
+                                <i class="fa-solid fa-circle-play text-blue-500 text-4xl mb-2 animate-pulse"></i>
+                                <div class="text-xs font-bold text-slate-200">สตรีมสด RTSP (Hikvision)</div>
+                                <div class="text-[9px] text-slate-400 mt-1 max-w-[200px] leading-tight">เบราว์เซอร์ไม่สามารถเล่น RTSP ตรงๆ ได้ กรุณากดปุ่มด้านล่างเพื่อเปิดเล่นบนเครื่องของคุณ</div>
+                                <a href="${cam.mediaUrl}" class="mt-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10px] font-bold transition-all shadow-md shadow-blue-500/20"><i class="fa-solid fa-play mr-1"></i>เปิดดูสตรีมสด (เปิดด้วย VLC)</a>
+                            </div>
+                        `;
+                    } else if(cam.mediaUrl.includes('youtube') || cam.mediaUrl.includes('iframe') || cam.mediaUrl.includes('<iframe')) {
                         let srcUrl = cam.mediaUrl; if(srcUrl.includes('src="')) srcUrl = srcUrl.split('src="')[1].split('"')[0];
                         mediaHtml = `<iframe src="${srcUrl}" class="custom-popup-media" frameborder="0" allowfullscreen autoplay></iframe>`;
                     } else if (cam.mediaUrl.endsWith('.m3u8') || cam.mediaUrl.endsWith('.mp4')) {
