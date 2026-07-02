@@ -3944,15 +3944,48 @@
         }
 
         function openInventoryModal(id='', name='', cat='กล้อง CCTV', total=1, avail=1, min=0, unit='ตัว') {
-            document.getElementById('inventory-modal').classList.remove('hidden'); isEditInvMode = id !== '';
+            document.getElementById('inventory-modal').classList.remove('hidden'); 
+            isEditInvMode = id !== '';
             document.getElementById('inv-modal-title').innerText = isEditInvMode ? "แก้ไขข้อมูลสินค้า" : "เพิ่มสินค้าใหม่";
-            document.getElementById('inv-id').value = id; document.getElementById('inv-id').disabled = isEditInvMode;
-            document.getElementById('inv-name').value = name; document.getElementById('inv-category').value = cat;
-            document.getElementById('inv-qty').value = total; document.getElementById('inv-min').value = min; document.getElementById('inv-unit').value = unit;
+            
+            if (isEditInvMode) {
+                document.getElementById('inv-id').value = id; 
+                document.getElementById('inv-id').disabled = true;
+            } else {
+                // เพิ่มสินค้าใหม่: เจนเนอเรตรหัสสินค้าอัตโนมัติ (INV-XXXX)
+                document.getElementById('inv-id').disabled = false;
+                let nextNum = 1;
+                if (inventoryList && inventoryList.length > 0) {
+                    const invIds = inventoryList
+                        .map(item => item.itemId)
+                        .filter(itemId => itemId.startsWith('INV-'));
+                    if (invIds.length > 0) {
+                        const nums = invIds.map(itemId => {
+                            const numStr = itemId.replace('INV-', '');
+                            const num = parseInt(numStr, 10);
+                            return isNaN(num) ? 0 : num;
+                        });
+                        nextNum = Math.max(...nums) + 1;
+                    }
+                }
+                const nextId = 'INV-' + String(nextNum).padStart(4, '0');
+                document.getElementById('inv-id').value = nextId;
+            }
+            
+            document.getElementById('inv-name').value = name; 
+            document.getElementById('inv-category').value = cat;
+            document.getElementById('inv-qty').value = total; 
+            document.getElementById('inv-min').value = min; 
+            document.getElementById('inv-unit').value = unit;
             
             const availDiv = document.getElementById('div-inv-available');
-            if (isEditInvMode) { availDiv.classList.remove('hidden'); document.getElementById('inv-available').value = avail; } 
-            else { availDiv.classList.add('hidden'); document.getElementById('inv-available').value = total; }
+            if (isEditInvMode) { 
+                availDiv.classList.remove('hidden'); 
+                document.getElementById('inv-available').value = avail; 
+            } else { 
+                availDiv.classList.add('hidden'); 
+                document.getElementById('inv-available').value = total; 
+            }
         }
 
         function saveInventory() {
