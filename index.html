@@ -1120,11 +1120,187 @@
                 </div>
             </div>
             
+            </div>
+        </div>
+    </div>
+
+    <!-- Maintenance Detail Modal -->
+    <div id="maintain-detail-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[2000] flex items-center justify-center p-4 fade-in">
+        <div class="glass-modal p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] w-full max-w-lg max-h-[85dvh] overflow-y-auto relative slide-up custom-scrollbar">
+            <button onclick="document.getElementById('maintain-detail-modal').classList.add('hidden');" class="absolute top-4 right-4 md:top-6 md:right-6 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-rose-100 hover:text-rose-600 transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="flex items-center gap-4 md:gap-5 mb-6 md:mb-8 border-b border-slate-100 pb-4">
+                <div class="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl md:rounded-2xl flex items-center justify-center text-white text-xl md:text-2xl shadow-lg shadow-blue-500/20"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                <div>
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 tracking-tight">รายละเอียดใบแจ้งซ่อม</h2>
+                    <p class="text-xs md:text-sm text-slate-500 font-medium">รหัสใบงาน: <span id="det-maintain-id" class="font-mono font-bold text-blue-600"></span></p>
+                </div>
+            </div>
+            
+            <div class="space-y-4 text-xs md:text-sm">
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">รหัสกล้อง:</span>
+                    <span id="det-maintain-camId" class="w-2/3 text-slate-800 font-bold font-mono"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">สถานที่ติดตั้ง:</span>
+                    <span id="det-maintain-camName" class="w-2/3 text-slate-700 font-bold"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">โครงการ:</span>
+                    <span id="det-maintain-project" class="w-2/3 text-slate-700 font-bold"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">ผู้รายงาน:</span>
+                    <span id="det-maintain-reportedBy" class="w-2/3 text-slate-700 font-medium"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">วันที่แจ้งซ่อม:</span>
+                    <span id="det-maintain-date" class="w-2/3 text-slate-700 font-medium"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">สถานะงาน:</span>
+                    <span id="det-maintain-status" class="w-2/3 font-bold"></span>
+                </div>
+                <div class="flex flex-col border-b border-slate-50 pb-2">
+                    <span class="text-slate-400 font-bold mb-1">รายละเอียดปัญหา:</span>
+                    <span id="det-maintain-issue" class="text-slate-700 font-medium whitespace-pre-wrap bg-slate-50 p-3 rounded-xl border border-slate-100"></span>
+                </div>
+                <div id="det-maintain-gallery-section" class="flex flex-col pb-2">
+                    <span class="text-slate-400 font-bold mb-2">รูปภาพประกอบ:</span>
+                    <div id="det-maintain-gallery" class="flex flex-wrap gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100 justify-start items-center">
+                    </div>
+                </div>
+            </div>
+            
             <div class="flex gap-3 mt-6 md:mt-8 pt-4 border-t border-slate-100">
-                <button id="btn-export-claim-pdf" class="flex-1 py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-xl font-bold shadow-lg shadow-orange-500/20 hover:shadow-xl hover:-translate-y-0.5 transition-all text-xs md:text-sm flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-file-pdf text-base"></i> ส่งออก PDF ใบส่งเคลม
+                <button id="btn-export-maintain-pdf" class="flex-1 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-bold shadow-lg shadow-blue-500/20 hover:shadow-xl hover:-translate-y-0.5 transition-all text-xs md:text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-file-pdf text-base"></i> ส่งออก PDF ใบงาน
                 </button>
-                <button onclick="document.getElementById('claim-detail-modal').classList.add('hidden');" class="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold transition-all text-xs md:text-sm">
+                <button onclick="document.getElementById('maintain-detail-modal').classList.add('hidden');" class="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold transition-all text-xs md:text-sm">
+                    ปิด
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Installation Detail Modal -->
+    <div id="install-detail-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[2000] flex items-center justify-center p-4 fade-in">
+        <div class="glass-modal p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] w-full max-w-lg max-h-[85dvh] overflow-y-auto relative slide-up custom-scrollbar">
+            <button onclick="document.getElementById('install-detail-modal').classList.add('hidden');" class="absolute top-4 right-4 md:top-6 md:right-6 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-rose-100 hover:text-rose-600 transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="flex items-center gap-4 md:gap-5 mb-6 md:mb-8 border-b border-slate-100 pb-4">
+                <div class="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-teal-500 to-emerald-600 rounded-xl md:rounded-2xl flex items-center justify-center text-white text-xl md:text-2xl shadow-lg shadow-teal-500/20"><i class="fa-solid fa-tools"></i></div>
+                <div>
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 tracking-tight">รายละเอียดงานติดตั้ง</h2>
+                    <p class="text-xs md:text-sm text-slate-500 font-medium">รหัสใบติดตั้ง: <span id="det-install-id" class="font-mono font-bold text-teal-600"></span></p>
+                </div>
+            </div>
+            
+            <div class="space-y-4 text-xs md:text-sm">
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">ชื่อลูกค้า / โครงการ:</span>
+                    <span id="det-install-custName" class="w-2/3 text-slate-800 font-bold"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">ข้อมูลการติดต่อ:</span>
+                    <span id="det-install-contact" class="w-2/3 text-slate-700 font-bold"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">ผู้แจ้งงาน:</span>
+                    <span id="det-install-reportedBy" class="w-2/3 text-slate-700 font-medium"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">วันที่รายงาน:</span>
+                    <span id="det-install-date" class="w-2/3 text-slate-700 font-medium"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">สถานะ:</span>
+                    <span id="det-install-status" class="w-2/3 font-bold"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">อัปเดตล่าสุด:</span>
+                    <span id="det-install-lastUpdate" class="w-2/3 text-slate-500 font-medium"></span>
+                </div>
+                <div class="flex flex-col border-b border-slate-50 pb-2">
+                    <span class="text-slate-400 font-bold mb-1">รายละเอียดการติดตั้ง:</span>
+                    <span id="det-install-details" class="text-slate-700 font-medium whitespace-pre-wrap bg-slate-50 p-3 rounded-xl border border-slate-100"></span>
+                </div>
+                <div id="det-install-gallery-section" class="flex flex-col pb-2">
+                    <span class="text-slate-400 font-bold mb-2">รูปภาพประกอบ:</span>
+                    <div id="det-install-gallery" class="flex flex-wrap gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100 justify-start items-center">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex gap-3 mt-6 md:mt-8 pt-4 border-t border-slate-100">
+                <button id="btn-export-install-pdf" class="flex-1 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white rounded-xl font-bold shadow-lg shadow-teal-500/20 hover:shadow-xl hover:-translate-y-0.5 transition-all text-xs md:text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-file-pdf text-base"></i> ส่งออก PDF ใบงาน
+                </button>
+                <button onclick="document.getElementById('install-detail-modal').classList.add('hidden');" class="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold transition-all text-xs md:text-sm">
+                    ปิด
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Borrow Detail Modal -->
+    <div id="borrow-detail-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[2000] flex items-center justify-center p-4 fade-in">
+        <div class="glass-modal p-6 md:p-10 rounded-2xl md:rounded-[2.5rem] w-full max-w-lg max-h-[85dvh] overflow-y-auto relative slide-up custom-scrollbar">
+            <button onclick="document.getElementById('borrow-detail-modal').classList.add('hidden');" class="absolute top-4 right-4 md:top-6 md:right-6 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-rose-100 hover:text-rose-600 transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="flex items-center gap-4 md:gap-5 mb-6 md:mb-8 border-b border-slate-100 pb-4">
+                <div class="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-violet-500 to-fuchsia-600 rounded-xl md:rounded-2xl flex items-center justify-center text-white text-xl md:text-2xl shadow-lg shadow-violet-500/20"><i class="fa-solid fa-clipboard-list"></i></div>
+                <div>
+                    <h2 class="text-xl md:text-2xl font-black text-slate-800 tracking-tight">รายละเอียดการยืม-คืน</h2>
+                    <p class="text-xs md:text-sm text-slate-500 font-medium">รหัสการยืม: <span id="det-borrow-id" class="font-mono font-bold text-violet-600"></span></p>
+                </div>
+            </div>
+            
+            <div class="space-y-4 text-xs md:text-sm">
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">ชื่อสินค้า:</span>
+                    <span id="det-borrow-itemName" class="w-2/3 text-slate-800 font-bold"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">รหัสสินค้า (Item ID):</span>
+                    <span id="det-borrow-itemId" class="w-2/3 text-slate-600 font-mono font-bold"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">จำนวนที่ยืม:</span>
+                    <span id="det-borrow-qty" class="w-2/3 text-slate-800 font-black"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">ผู้ขอเบิกยืม:</span>
+                    <span id="det-borrow-borrower" class="w-2/3 text-slate-700 font-bold"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">วันที่ยืม:</span>
+                    <span id="det-borrow-date" class="w-2/3 text-slate-700 font-medium"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">กำหนดส่งคืน:</span>
+                    <span id="det-borrow-expected" class="w-2/3 text-rose-600 font-bold"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">วันที่คืนจริง:</span>
+                    <span id="det-borrow-actual" class="w-2/3 text-slate-600 font-medium"></span>
+                </div>
+                <div class="flex border-b border-slate-50 pb-2">
+                    <span class="w-1/3 text-slate-400 font-bold">สถานะล่าสุด:</span>
+                    <span id="det-borrow-status" class="w-2/3 font-bold"></span>
+                </div>
+                <div class="flex flex-col pb-2">
+                    <span class="text-slate-400 font-bold mb-1">หมายเหตุบันทึก:</span>
+                    <span id="det-borrow-note" class="text-slate-700 font-medium bg-slate-50 p-3 rounded-xl border border-slate-100"></span>
+                </div>
+            </div>
+            
+            <div class="flex gap-3 mt-6 md:mt-8 pt-4 border-t border-slate-100">
+                <button id="btn-export-borrow-pdf" class="flex-1 py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white rounded-xl font-bold shadow-lg shadow-violet-500/20 hover:shadow-xl hover:-translate-y-0.5 transition-all text-xs md:text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-file-pdf text-base"></i> ส่งออก PDF ใบยืมอุปกรณ์
+                </button>
+                <button onclick="document.getElementById('borrow-detail-modal').classList.add('hidden');" class="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold transition-all text-xs md:text-sm">
                     ปิด
                 </button>
             </div>
@@ -3322,7 +3498,7 @@
 
                 let imgBtnHtml = `<span class="text-slate-300 text-[8px] md:text-xs font-bold bg-slate-100 px-1.5 md:px-3 py-1 rounded w-full block">ไม่มีรูป</span>`;
                 if (t.images && t.images.trim() !== "") {
-                    imgBtnHtml = `<button onclick="viewTicketImages('${t.ticketId}', '${t.images}')" class="px-1.5 md:px-3 py-1 md:py-2 bg-blue-50 hover:bg-blue-500 text-blue-600 hover:text-white rounded md:rounded-xl text-[8px] md:text-xs font-bold transition-colors flex items-center justify-center gap-1 mx-auto border border-blue-100 hover:border-blue-500 w-full"><i class="fa-solid fa-image"></i> รูป</button>`;
+                    imgBtnHtml = `<button onclick="event.stopPropagation(); viewTicketImages('${t.ticketId}', '${t.images}')" class="px-1.5 md:px-3 py-1 md:py-2 bg-blue-50 hover:bg-blue-500 text-blue-600 hover:text-white rounded md:rounded-xl text-[8px] md:text-xs font-bold transition-colors flex items-center justify-center gap-1 mx-auto border border-blue-100 hover:border-blue-500 w-full"><i class="fa-solid fa-image"></i> รูป</button>`;
                 }
 
                 const canDelete = currentUser && currentUser.role === 'Admin';
@@ -3332,7 +3508,7 @@
                 const safeIssue = t.issue.replace(/'/g, "\\'");
                 
                 return `
-                <tr class="hover:bg-slate-50 transition-colors border-b border-slate-50">
+                <tr onclick="viewMaintainDetails('${t.ticketId}')" class="hover:bg-slate-50 cursor-pointer transition-colors border-b border-slate-50">
                     <td class="p-1 md:p-4 font-mono text-[8px] md:text-xs font-bold text-slate-500 align-top break-all">${t.ticketId}</td>
                     <td class="p-1 md:p-4 font-black text-[9px] md:text-sm text-blue-600 align-top break-words">${t.camId}</td>
                     <td class="p-1 md:p-4 text-slate-700 font-medium align-top leading-tight text-[9px] md:text-sm">${t.issue}</td>
@@ -3341,7 +3517,7 @@
                     <td class="p-1 md:p-4 text-center align-top">${imgBtnHtml}</td>
                     <td class="p-1 md:p-4 text-center align-top">
                         <div class="flex flex-col items-center gap-1 w-full">
-                            <select onchange="changeTicketStatus('${t.ticketId}', this.value)" class="w-full p-1 md:py-2 md:px-3 rounded md:rounded-lg text-[8px] md:text-xs font-extrabold border outline-none cursor-pointer text-center shadow-sm ${statusClass}">
+                            <select onchange="event.stopPropagation(); changeTicketStatus('${t.ticketId}', this.value)" onclick="event.stopPropagation();" class="w-full p-1 md:py-2 md:px-3 rounded md:rounded-lg text-[8px] md:text-xs font-extrabold border outline-none cursor-pointer text-center shadow-sm ${statusClass}">
                                 <option value="รอดำเนินการ" ${t.status === 'รอดำเนินการ' ? 'selected' : ''}>รอ</option>
                                 <option value="กำลังดำเนินการ" ${t.status === 'กำลังดำเนินการ' ? 'selected' : ''}>กำลังทำ</option>
                                 <option value="ซ่อมเสร็จแล้ว" ${t.status === 'ซ่อมเสร็จแล้ว' ? 'selected' : ''}>เสร็จ</option>
@@ -3349,9 +3525,9 @@
                             </select>
                             
                             <div class="flex gap-1 w-full justify-center">
-                                <button onclick="exportSingleTicket('${t.ticketId}')" title="โหลดใบงาน" class="flex-1 py-1 md:py-1.5 bg-white border border-slate-200 text-red-500 hover:bg-red-500 hover:text-white rounded md:rounded-lg text-[8px] md:text-xs font-bold transition-colors flex items-center justify-center shadow-sm"><i class="fa-solid fa-file-pdf"></i></button>
-                                <button onclick="openEditStaffTicket('${t.ticketId}', '${t.camId}', '${safeIssue}', '${t.images}')" title="แก้ไข/เพิ่มรูป" class="flex-1 py-1 md:py-1.5 bg-white border border-slate-200 text-amber-500 hover:bg-amber-500 hover:text-white rounded md:rounded-lg text-[8px] md:text-xs font-bold transition-colors flex items-center justify-center shadow-sm"><i class="fa-solid fa-pen"></i></button>
-                                ${canDelete ? `<button onclick="confirmDelete('${t.ticketId}', 'maintain')" class="flex-1 py-1 md:py-1.5 bg-white border border-slate-200 text-rose-500 hover:bg-rose-500 hover:border-rose-500 hover:text-white rounded md:rounded-lg text-[8px] md:text-xs font-bold transition-colors flex items-center justify-center shadow-sm"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+                                <button onclick="event.stopPropagation(); exportSingleTicket('${t.ticketId}')" title="โหลดใบงาน" class="flex-1 py-1 md:py-1.5 bg-white border border-slate-200 text-red-500 hover:bg-red-500 hover:text-white rounded md:rounded-lg text-[8px] md:text-xs font-bold transition-colors flex items-center justify-center shadow-sm"><i class="fa-solid fa-file-pdf"></i></button>
+                                <button onclick="event.stopPropagation(); openEditStaffTicket('${t.ticketId}', '${t.camId}', '${safeIssue}', '${t.images}')" title="แก้ไข/เพิ่มรูป" class="flex-1 py-1 md:py-1.5 bg-white border border-slate-200 text-amber-500 hover:bg-amber-500 hover:text-white rounded md:rounded-lg text-[8px] md:text-xs font-bold transition-colors flex items-center justify-center shadow-sm"><i class="fa-solid fa-pen"></i></button>
+                                ${canDelete ? `<button onclick="event.stopPropagation(); confirmDelete('${t.ticketId}', 'maintain')" class="flex-1 py-1 md:py-1.5 bg-white border border-slate-200 text-rose-500 hover:bg-rose-500 hover:border-rose-500 hover:text-white rounded md:rounded-lg text-[8px] md:text-xs font-bold transition-colors flex items-center justify-center shadow-sm"><i class="fa-solid fa-trash-can"></i></button>` : ''}
                             </div>
                         </div>
                     </td>
@@ -3722,8 +3898,8 @@
                 let availStyle = 'text-emerald-600 bg-emerald-50 border-emerald-200/60 shadow-sm';
                 
                 if (item.availableQty <= item.minStock) {
-                    alertBadge = `<br><span class="inline-block mt-1 px-1 md:px-2 py-0.5 bg-rose-100 text-rose-600 rounded border border-rose-200 text-[8px] md:text-[10px] font-black uppercase tracking-wider">ใกล้หมด</span>`;
-                    availStyle = 'text-rose-600 bg-rose-50 border-rose-200/60 shadow-sm';
+                    alertBadge = `<br><span class="inline-flex items-center gap-1 mt-1 px-1.5 md:px-2 py-0.5 bg-rose-500 text-white rounded text-[8px] md:text-[10px] font-black uppercase tracking-wider animate-pulse shadow-sm shadow-rose-500/20"><i class="fa-solid fa-triangle-exclamation"></i> ใกล้หมด</span>`;
+                    availStyle = 'text-rose-600 bg-rose-50 border-2 border-rose-300 font-bold shadow-sm';
                 }
                 
                 const safeName = item.itemName.replace(/'/g, "\\'"); 
@@ -3845,15 +4021,23 @@
                 const canDelete = currentUser && currentUser.role === 'Admin';
                 
                 if (b.status === "กำลังยืม") {
-                    statusBadge = `<span class="w-full py-1 md:py-1.5 bg-amber-50 text-amber-600 border border-amber-200 rounded text-[8px] md:text-xs font-black block mb-1 md:mb-2 shadow-sm text-center">กำลังยืม</span>`;
-                    actionBtn = `<button onclick="submitReturn('${b.borrowId}')" class="w-full py-1 md:py-2 bg-white border border-violet-200 text-violet-600 hover:bg-violet-600 hover:text-white rounded text-[8px] md:text-[11px] font-extrabold transition-all shadow-sm">คืนของ</button>`;
+                    const expTime = parseDateTH(b.expectedReturn);
+                    const todayTime = new Date().setHours(0,0,0,0);
+                    const isOverdue = expTime > 0 && expTime < todayTime;
+                    
+                    if (isOverdue) {
+                        statusBadge = `<span class="w-full py-1 md:py-1.5 bg-rose-50 text-rose-600 border border-rose-200 rounded text-[8px] md:text-xs font-black block mb-1 md:mb-2 shadow-sm text-center animate-pulse">เกินกำหนด 🔴</span>`;
+                    } else {
+                        statusBadge = `<span class="w-full py-1 md:py-1.5 bg-amber-50 text-amber-600 border border-amber-200 rounded text-[8px] md:text-xs font-black block mb-1 md:mb-2 shadow-sm text-center">กำลังยืม</span>`;
+                    }
+                    actionBtn = `<button onclick="event.stopPropagation(); submitReturn('${b.borrowId}')" class="w-full py-1 md:py-2 bg-white border border-violet-200 text-violet-600 hover:bg-violet-600 hover:text-white rounded text-[8px] md:text-[11px] font-extrabold transition-all shadow-sm">คืนของ</button>`;
                 } else {
                     statusBadge = `<span class="w-full py-1 md:py-1.5 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded text-[8px] md:text-xs font-black block shadow-sm text-center">คืนแล้ว</span>`;
                     actionBtn = `<span class="text-[7px] md:text-[10px] text-slate-400 block mt-1 font-bold bg-slate-50 py-0.5 md:py-1 rounded border border-slate-100 text-center w-full leading-tight">คืน:<br>${b.actualReturn.split(' ')[0]}</span>`;
                 }
 
                 return `
-                <tr class="hover:bg-slate-50 transition-colors border-b border-slate-50">
+                <tr onclick="viewBorrowDetails('${b.borrowId}')" class="hover:bg-slate-50 cursor-pointer transition-colors border-b border-slate-50">
                     <td class="p-2 md:p-4 font-mono text-[8px] md:text-xs font-bold text-slate-500 align-top break-all">${b.borrowId}</td>
                     <td class="p-2 md:p-4 align-top">
                         <div class="font-bold text-slate-800 text-[9px] md:text-sm mb-1 leading-tight break-words">${b.itemName}</div>
@@ -3868,7 +4052,7 @@
                             ${statusBadge}
                             <div class="flex flex-col md:flex-row gap-1 items-center justify-center mt-1 w-full">
                                 <div class="w-full md:flex-1">${actionBtn}</div>
-                                ${canDelete ? `<button onclick="confirmDelete('${b.borrowId}', 'borrow')" class="w-full md:w-8 py-1 md:py-0 md:h-8 bg-white border border-slate-200 text-rose-500 hover:bg-rose-500 hover:border-rose-500 hover:text-white rounded text-[8px] md:text-xs font-bold transition-colors shrink-0 flex items-center justify-center shadow-sm"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+                                ${canDelete ? `<button onclick="event.stopPropagation(); confirmDelete('${b.borrowId}', 'borrow')" class="w-full md:w-8 py-1 md:py-0 md:h-8 bg-white border border-slate-200 text-rose-500 hover:bg-rose-500 hover:border-rose-500 hover:text-white rounded text-[8px] md:text-xs font-bold transition-colors shrink-0 flex items-center justify-center shadow-sm"><i class="fa-solid fa-trash-can"></i></button>` : ''}
                             </div>
                         </div>
                     </td>
@@ -4157,7 +4341,8 @@
             const modals = [
                 'claim-modal', 'claim-detail-modal', 'staff-ticket-modal', 
                 'view-images-modal', 'install-modal', 'add-camera-modal', 
-                'user-modal', 'inventory-modal', 'borrow-modal'
+                'user-modal', 'inventory-modal', 'borrow-modal',
+                'maintain-detail-modal', 'install-detail-modal', 'borrow-detail-modal'
             ];
             modals.forEach(id => {
                 const modal = document.getElementById(id);
@@ -4253,6 +4438,176 @@
             }
         }
 
+        function viewMaintainDetails(ticketId) {
+            const t = maintainTicketsList.find(item => item.ticketId === ticketId);
+            if (!t) return;
+            
+            document.getElementById('det-maintain-id').innerText = t.ticketId;
+            document.getElementById('det-maintain-camId').innerText = t.camId;
+            
+            const cam = cctvDataList.find(c => c.id === t.camId);
+            document.getElementById('det-maintain-camName').innerText = cam ? cam.name : 'ไม่พบข้อมูลกล้อง';
+            document.getElementById('det-maintain-project').innerText = cam ? cam.project : '-';
+            
+            document.getElementById('det-maintain-reportedBy').innerText = t.reportedBy;
+            document.getElementById('det-maintain-date').innerText = t.date;
+            document.getElementById('det-maintain-issue').innerText = t.issue || '-';
+            
+            const statusEl = document.getElementById('det-maintain-status');
+            statusEl.innerText = t.status;
+            statusEl.className = "w-2/3 font-bold";
+            if (t.status === 'รอดำเนินการ') statusEl.classList.add('text-amber-500');
+            else if (t.status === 'กำลังดำเนินการ') statusEl.classList.add('text-blue-500');
+            else if (t.status === 'ซ่อมเสร็จแล้ว') statusEl.classList.add('text-emerald-500');
+            else if (t.status === 'ยกเลิก') statusEl.classList.add('text-rose-500');
+            
+            const gallery = document.getElementById('det-maintain-gallery');
+            const gallerySection = document.getElementById('det-maintain-gallery-section');
+            gallery.innerHTML = '';
+            
+            if (t.images && t.images.trim() !== '') {
+                gallerySection.classList.remove('hidden');
+                const imgUrls = t.images.split(',').map(url => url.trim());
+                imgUrls.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.className = "w-20 h-20 md:w-24 md:h-24 object-cover rounded-xl border border-slate-200 cursor-pointer hover:scale-105 transition-transform shadow-sm";
+                    img.onclick = () => {
+                        viewTicketImages(t.ticketId, t.images);
+                    };
+                    gallery.appendChild(img);
+                });
+            } else {
+                gallerySection.classList.add('hidden');
+            }
+            
+            document.getElementById('btn-export-maintain-pdf').onclick = () => exportSingleTicket(t.ticketId);
+            
+            document.getElementById('maintain-detail-modal').classList.remove('hidden');
+        }
+
+        function viewInstallDetails(installId) {
+            const i = installDataList.find(item => item.installId === installId);
+            if (!i) return;
+            
+            document.getElementById('det-install-id').innerText = i.installId;
+            document.getElementById('det-install-custName').innerText = i.customerName;
+            document.getElementById('det-install-contact').innerText = i.contactInfo || '-';
+            document.getElementById('det-install-reportedBy').innerText = i.reportedBy;
+            document.getElementById('det-install-date').innerText = i.reportDate;
+            document.getElementById('det-install-lastUpdate').innerText = i.lastUpdate || '-';
+            document.getElementById('det-install-details').innerText = i.installDetails || '-';
+            
+            const statusEl = document.getElementById('det-install-status');
+            statusEl.innerText = i.status;
+            statusEl.className = "w-2/3 font-bold";
+            if (i.status === 'รอดำเนินการ') statusEl.classList.add('text-teal-500');
+            else if (i.status === 'กำลังดำเนินการ') statusEl.classList.add('text-blue-500');
+            else if (i.status === 'สำเร็จ') statusEl.classList.add('text-emerald-500');
+            else if (i.status === 'ยกเลิก') statusEl.classList.add('text-rose-500');
+            
+            const gallery = document.getElementById('det-install-gallery');
+            const gallerySection = document.getElementById('det-install-gallery-section');
+            gallery.innerHTML = '';
+            
+            if (i.images && i.images.trim() !== '') {
+                gallerySection.classList.remove('hidden');
+                const imgUrls = i.images.split(',').map(url => url.trim());
+                imgUrls.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.className = "w-20 h-20 md:w-24 md:h-24 object-cover rounded-xl border border-slate-200 cursor-pointer hover:scale-105 transition-transform shadow-sm";
+                    img.onclick = () => {
+                        viewTicketImages(i.installId, i.images);
+                    };
+                    gallery.appendChild(img);
+                });
+            } else {
+                gallerySection.classList.add('hidden');
+            }
+            
+            document.getElementById('btn-export-install-pdf').onclick = () => exportSingleInstallTicket(i.installId);
+            
+            document.getElementById('install-detail-modal').classList.remove('hidden');
+        }
+
+        function viewBorrowDetails(borrowId) {
+            const b = borrowDataList.find(item => item.borrowId === borrowId);
+            if (!b) return;
+            
+            document.getElementById('det-borrow-id').innerText = b.borrowId;
+            document.getElementById('det-borrow-itemName').innerText = b.itemName;
+            document.getElementById('det-borrow-itemId').innerText = b.itemId;
+            document.getElementById('det-borrow-qty').innerText = b.qty + ' ' + (b.unit || 'หน่วย');
+            document.getElementById('det-borrow-borrower').innerText = b.borrower;
+            document.getElementById('det-borrow-date').innerText = b.borrowDate;
+            document.getElementById('det-borrow-expected').innerText = b.expectedReturn || '-';
+            document.getElementById('det-borrow-actual').innerText = b.actualReturn || '-';
+            document.getElementById('det-borrow-note').innerText = b.note || '-';
+            
+            const statusEl = document.getElementById('det-borrow-status');
+            statusEl.innerText = b.status;
+            statusEl.className = "w-2/3 font-bold";
+            
+            if (b.status === 'กำลังยืม') {
+                const expTime = parseDateTH(b.expectedReturn);
+                const todayTime = new Date().setHours(0,0,0,0);
+                if (expTime > 0 && expTime < todayTime) {
+                    statusEl.innerText = 'เกินกำหนด 🔴';
+                    statusEl.className = "w-2/3 font-bold text-rose-600 animate-pulse";
+                } else {
+                    statusEl.classList.add('text-amber-500');
+                }
+            } else if (b.status === 'คืนแล้ว') {
+                statusEl.classList.add('text-emerald-500');
+            }
+            
+            document.getElementById('btn-export-borrow-pdf').onclick = () => exportSingleBorrowPDF(b.borrowId);
+            
+            document.getElementById('borrow-detail-modal').classList.remove('hidden');
+        }
+
+        function exportSingleBorrowPDF(borrowId) {
+            const pdfBtn = document.getElementById('btn-export-borrow-pdf');
+            const originalHtml = pdfBtn.innerHTML;
+            
+            pdfBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังสร้าง PDF...';
+            pdfBtn.disabled = true;
+            
+            if (typeof google !== 'undefined') {
+                google.script.run.withSuccessHandler(res => {
+                    pdfBtn.innerHTML = originalHtml;
+                    pdfBtn.disabled = false;
+                    
+                    if (res.success) {
+                        Swal.fire({
+                            title: 'สร้างใบยืมอุปกรณ์สำเร็จ',
+                            text: `สร้างไฟล์ PDF ของใบงานรหัส ${borrowId} เรียบร้อยแล้ว`,
+                            icon: 'success',
+                            showCancelButton: true,
+                            confirmButtonText: 'เปิดดู PDF',
+                            cancelButtonText: 'ปิด',
+                            confirmButtonColor: '#8b5cf6'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.open(res.url, '_blank');
+                            }
+                        });
+                    } else {
+                        Swal.fire('เกิดข้อผิดพลาด', res.error, 'error');
+                    }
+                }).withFailureHandler(err => {
+                    pdfBtn.innerHTML = originalHtml;
+                    pdfBtn.disabled = false;
+                    Swal.fire('ข้อผิดพลาดเครือข่าย', 'ไม่สามารถสร้างไฟล์ PDF ได้', 'error');
+                }).generateSingleBorrowPDF(borrowId);
+            } else {
+                pdfBtn.innerHTML = originalHtml;
+                pdfBtn.disabled = false;
+                Swal.fire('แจ้งเตือน', 'สภาพแวดล้อมไม่รองรับ Google Apps Script', 'warning');
+            }
+        }
+
         // ==========================================
         // Installation Logic (งานติดตั้ง)
         // ==========================================
@@ -4303,7 +4658,7 @@
 
                 let imgBtnHtml = `<span class="text-slate-300 text-[8px] md:text-xs font-bold bg-slate-100 px-1.5 md:px-3 py-1 rounded w-full block text-center">ไม่มีรูป</span>`;
                 if (item.images && item.images.trim() !== "") {
-                    imgBtnHtml = `<button onclick="viewTicketImages('${item.installId}', '${item.images}')" class="px-1.5 md:px-3 py-1 md:py-2 bg-teal-50 hover:bg-teal-500 text-teal-600 hover:text-white rounded md:rounded-xl text-[8px] md:text-xs font-bold transition-colors flex items-center justify-center gap-1 mx-auto border border-teal-100 hover:border-teal-500 w-full"><i class="fa-solid fa-image"></i> รูป</button>`;
+                    imgBtnHtml = `<button onclick="event.stopPropagation(); viewTicketImages('${item.installId}', '${item.images}')" class="px-1.5 md:px-3 py-1 md:py-2 bg-teal-50 hover:bg-teal-500 text-teal-600 hover:text-white rounded md:rounded-xl text-[8px] md:text-xs font-bold transition-colors flex items-center justify-center gap-1 mx-auto border border-teal-100 hover:border-teal-500 w-full"><i class="fa-solid fa-image"></i> รูป</button>`;
                 }
 
                 let actionHtml = `<span class="w-full py-1 md:py-1.5 rounded text-[8px] md:text-xs font-black border shadow-sm ${statusClass} block text-center">${item.status}</span>`;
@@ -4311,22 +4666,22 @@
                 
                 if(currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Staff')) {
                     actionHtml = `
-                        <select onchange="changeInstallStatus('${item.installId}', this.value)" class="w-full py-1 md:py-2 rounded text-[8px] md:text-xs font-extrabold border outline-none cursor-pointer text-center shadow-sm mb-1 ${statusClass}">
+                        <select onchange="event.stopPropagation(); changeInstallStatus('${item.installId}', this.value)" onclick="event.stopPropagation();" class="w-full py-1 md:py-2 rounded text-[8px] md:text-xs font-extrabold border outline-none cursor-pointer text-center shadow-sm mb-1 ${statusClass}">
                             <option value="รอดำเนินการ" ${item.status === 'รอดำเนินการ' ? 'selected' : ''}>รอ</option>
                             <option value="กำลังดำเนินการ" ${item.status === 'กำลังดำเนินการ' ? 'selected' : ''}>กำลังทำ</option>
                             <option value="สำเร็จ" ${item.status === 'สำเร็จ' ? 'selected' : ''}>สำเร็จ</option>
                             <option value="ยกเลิก" ${item.status === 'ยกเลิก' ? 'selected' : ''}>ยกเลิก</option>
                         </select>
                         <div class="flex gap-1 w-full justify-center">
-                            <button onclick="exportSingleInstallTicket('${item.installId}')" title="โหลดใบงาน" class="flex-1 py-1 md:py-1.5 bg-white border border-slate-200 text-teal-600 hover:bg-teal-500 hover:border-teal-500 hover:text-white rounded md:rounded-lg text-[8px] md:text-xs font-bold transition-colors flex items-center justify-center shadow-sm"><i class="fa-solid fa-file-pdf"></i></button>
-                            <button onclick="openEditInstall('${item.installId}', '${item.customerName}', '${item.contactInfo}', '${item.installDetails.replace(/'/g, "\\'")}', '${item.images}')" title="แก้ไข/เพิ่มรูป" class="flex-1 py-1 md:py-1.5 bg-white border border-slate-200 text-amber-500 hover:bg-amber-500 hover:text-white rounded md:rounded-lg text-[8px] md:text-xs font-bold transition-colors flex items-center justify-center shadow-sm"><i class="fa-solid fa-pen"></i></button>
-                            ${canDelete ? `<button onclick="confirmDelete('${item.installId}', 'install')" class="flex-1 py-1 md:py-1.5 bg-white border border-slate-200 text-rose-500 hover:bg-rose-500 hover:border-rose-500 hover:text-white rounded md:rounded-lg text-[8px] md:text-xs font-bold transition-colors flex items-center justify-center shrink-0 shadow-sm"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+                            <button onclick="event.stopPropagation(); exportSingleInstallTicket('${item.installId}')" title="โหลดใบงาน" class="flex-1 py-1 md:py-1.5 bg-white border border-slate-200 text-teal-600 hover:bg-teal-500 hover:border-teal-500 hover:text-white rounded md:rounded-lg text-[8px] md:text-xs font-bold transition-colors flex items-center justify-center shadow-sm"><i class="fa-solid fa-file-pdf"></i></button>
+                            <button onclick="event.stopPropagation(); openEditInstall('${item.installId}', '${item.customerName}', '${item.contactInfo}', '${item.installDetails.replace(/'/g, "\\'")}', '${item.images}')" title="แก้ไข/เพิ่มรูป" class="flex-1 py-1 md:py-1.5 bg-white border border-slate-200 text-amber-500 hover:bg-amber-500 hover:text-white rounded md:rounded-lg text-[8px] md:text-xs font-bold transition-colors flex items-center justify-center shadow-sm"><i class="fa-solid fa-pen"></i></button>
+                            ${canDelete ? `<button onclick="event.stopPropagation(); confirmDelete('${item.installId}', 'install')" class="flex-1 py-1 md:py-1.5 bg-white border border-slate-200 text-rose-500 hover:bg-rose-500 hover:border-rose-500 hover:text-white rounded md:rounded-lg text-[8px] md:text-xs font-bold transition-colors flex items-center justify-center shrink-0 shadow-sm"><i class="fa-solid fa-trash-can"></i></button>` : ''}
                         </div>
                     `;
                 }
 
                 return `
-                <tr class="hover:bg-slate-50 transition-colors border-b border-slate-50">
+                <tr onclick="viewInstallDetails('${item.installId}')" class="hover:bg-slate-50 cursor-pointer transition-colors border-b border-slate-50">
                     <td class="p-1 md:p-4 font-mono text-[8px] md:text-xs font-bold text-slate-500 align-top break-all">${item.installId}</td>
                     <td class="p-1 md:p-4 align-top">
                         <div class="font-bold text-slate-800 text-[9px] md:text-sm mb-1 leading-tight break-words">${item.customerName}</div>

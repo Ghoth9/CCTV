@@ -1416,6 +1416,68 @@ function generateSingleClaimPDF(claimId) {
   } catch (err) { return { success: false, error: err.toString() }; }
 }
 
+function generateSingleBorrowPDF(borrowId) {
+  try {
+    const ss = getActiveSS();
+    const borrows = getBorrowData().data;
+    const borrow = borrows.find(b => b.borrowId === borrowId);
+    
+    if (!borrow) return { success: false, error: "ไม่พบข้อมูลการยืม/คืนนี้" };
+
+    let htmlContent = `
+      <style>
+        body { font-family: 'Tahoma', sans-serif; padding: 20px 30px; color: #333; line-height: 1.5; font-size: 13px; }
+        .header-box { text-align: center; border: 2px solid #8b5cf6; padding: 8px; margin-bottom: 15px; background-color: #f5f3ff; }
+        .ticket-title { font-size: 20px; font-weight: bold; margin: 0; color: #7c3aed; }
+        .info-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+        .info-table td { padding: 6px 8px; border-bottom: 1px solid #eee; vertical-align: top; }
+        .label { font-weight: bold; width: 25%; color: #555; }
+        .value { width: 75%; }
+        .footer { margin-top: 40px; text-align: right; font-size: 12px; }
+        .status-badge { display: inline-block; padding: 3px 10px; border-radius: 4px; background: #ede9fe; color: #7c3aed; font-weight: bold; border: 1px solid #ddd6fe; }
+      </style>
+      
+      <div class="header-box">
+        <p class="ticket-title">ใบยืม-คืนอุปกรณ์ (Borrow-Return Form)</p>
+        <p style="margin: 5px 0 0 0;">ID: ${borrow.borrowId}</p>
+      </div>
+
+      <table class="info-table">
+        <tr><td class="label">วันที่ยืมอุปกรณ์:</td><td class="value">${borrow.borrowDate}</td></tr>
+        <tr><td class="label">กำหนดส่งคืน:</td><td class="value"><b>${borrow.expectedReturn}</b></td></tr>
+        <tr><td class="label">สถานะปัจจุบัน:</td><td class="value"><span class="status-badge">${borrow.status}</span></td></tr>
+        <tr><td class="label">ชื่ออุปกรณ์:</td><td class="value"><b>${borrow.itemName}</b></td></tr>
+        <tr><td class="label">รหัสอุปกรณ์ (Item ID):</td><td class="value">${borrow.itemId}</td></tr>
+        <tr><td class="label">จำนวนที่ยืม:</td><td class="value"><b>${borrow.qty} หน่วย</b></td></tr>
+        <tr><td class="label">ผู้ขอเข้ารับการยืม:</td><td class="value">${borrow.borrower}</td></tr>
+        <tr><td class="label">วันที่คืนสินค้าจริง:</td><td class="value">${borrow.actualReturn || '-'}</td></tr>
+        <tr><td class="label">หมายเหตุการยืม:</td><td class="value">${borrow.note || '-'}</td></tr>
+      </table>
+
+      <table style="width: 100%; margin-top: 50px; text-align: center;">
+        <tr>
+          <td>
+             <p>....................................................</p>
+             <p>ผู้ยืมอุปกรณ์ (ลงชื่อ)</p>
+             <p>วันที่: ______/______/______</p>
+          </td>
+          <td>
+             <p>....................................................</p>
+             <p>ผู้ส่งมอบ / เจ้าหน้าที่คลัง</p>
+             <p>วันที่: ______/______/______</p>
+          </td>
+        </tr>
+      </table>
+    `;
+
+    const blob = HtmlService.createHtmlOutput(htmlContent).getAs('application/pdf').setName(`BorrowSlip_${borrow.borrowId}.pdf`);
+    const folder = getOrCreateFolder("CCTV_Reports");
+    const file = folder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    return { success: true, url: file.getUrl() };
+  } catch (err) { return { success: false, error: err.toString() }; }
+}
+
 
 // ==========================================
 // Utils Functions & Delete Operations
