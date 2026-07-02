@@ -1789,7 +1789,8 @@
             if (!bellContainer || !currentUser) return;
             
             // ซ่อนกระดิ่งเตือนความเดือดร้อนถ้าเปิดหน้าแอดมินอยู่
-            const isAdminViewVisible = document.getElementById('admin-view') && !document.getElementById('admin-view').classList.contains('hidden');
+            const adminView = document.getElementById('admin-view');
+            const isAdminViewVisible = adminView && (adminView.style.display === 'flex' || (!adminView.classList.contains('hidden') && adminView.style.display !== 'none'));
             if (isAdminViewVisible) {
                 bellContainer.classList.add('hidden');
             } else {
@@ -2791,6 +2792,7 @@
         }
 
         function switchAdminTab(tabId) {
+            updateNotiLayout('admin');
             localStorage.setItem('last_active_tab', tabId);
             if(window.innerWidth < 1024) {
                 const sidebar = document.getElementById('admin-sidebar');
